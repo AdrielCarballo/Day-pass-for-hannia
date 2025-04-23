@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Invitación Especial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #000;
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+            height: 100vh;
+            touch-action: manipulation;
+        }
+        section {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        .active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        video, img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 80%;
+        }
+        button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid white;
+            color: white;
+            padding: 15px 0;
+            margin: 0;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 50px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        button:hover, button:active {
+            background: white;
+            color: black;
+        }
+        .hidden {
+            display: none;
+        }
+        #audio-control {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #audio-control img {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Audio para la música -->
+    <audio id="background-music" loop>
+        <source src="Congratulation_Feature_Bilal.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Control de audio -->
+    <div id="audio-control" onclick="toggleMusic()">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+PHBhdGggZD0iTTMgOXY2aDRsNSA1VjRMNyA5SDNtMTMuNSAzYzAtMS43Ny0xLjAyLTMuMjktMi41LTQuMDN2OC4wNWMxLjQ4LS43NCAyLjUtMi4yNiAyLjUtNC4wMk0xNCAzLjIzdjIuMDZjMi44OS44NiA1IDMuNTQgNSA2Ljcxcy0yLjExIDUuODUtNSA2LjcxdjIuMDZjNC4wMS0uOTEgNy00LjQ5IDctOC43N3MtMi45OS03Ljg2LTctOC43N3oiLz48L3N2Zz4=" alt="Audio">
+    </div>
+
+    <!-- Secciones -->
+    <section id="intro" class="active">
+        <video controls autoplay playsinline>
+            <source src="Introduccion de pagina.mp4" type="video/mp4">
+        </video>
+        <div class="button-container">
+            <button onclick="nextSection('video2')">Continuar</button>
+        </div>
+    </section>
+
+    <section id="video2">
+        <video controls autoplay playsinline>
+            <source src="Video 2 pagina.mp4" type="video/mp4">
+        </video>
+        <div class="button-container">
+            <button onclick="startMusic(); nextSection('video3')">Continuar</button>
+        </div>
+    </section>
+
+    <section id="video3">
+        <video controls autoplay playsinline>
+            <source src="Video 3 pagina.mp4" type="video/mp4">
+        </video>
+        <div class="button-container">
+            <button onclick="nextSection('ticket')">Continuar</button>
+        </div>
+    </section>
+
+    <!-- Ticket Day Pass -->
+    <section id="ticket">
+        <img src="Ticket Day Pass.png" alt="Ticket Day Pass">
+        <div class="button-container">
+            <button onclick="saveResponse('Ticket', 'Acepto'); nextSection('calendario')">Acepto</button>
+            <button onclick="negativeResponse()">No quiero</button>
+        </div>
+    </section>
+
+    <!-- Calendario -->
+    <section id="calendario">
+        <img src="Calendario.png" alt="Calendario">
+        <div class="button-container">
+            <button onclick="saveResponse('Fecha', '25'); nextSection('zoo')">25</button>
+            <button onclick="saveResponse('Fecha', '26'); nextSection('zoo')">26</button>
+            <button onclick="saveResponse('Fecha', '27'); nextSection('zoo')">27</button>
+        </div>
+    </section>
+
+    <!-- Zoo (Horas) -->
+    <section id="zoo">
+        <img src="Zoo.png" alt="Zoo">
+        <div class="button-container">
+            <button onclick="saveResponse('Hora', '9AM'); nextSection('invitacion-desayuno')">9AM</button>
+            <button onclick="saveResponse('Hora', '10AM'); nextSection('invitacion-desayuno')">10AM</button>
+            <button onclick="saveResponse('Hora', '11AM'); nextSection('invitacion-desayuno')">11AM</button>
+        </div>
+    </section>
+
+    <!-- Invitación a desayunar -->
+    <section id="invitacion-desayuno">
+        <video controls autoplay playsinline>
+            <source src="Invitacion a desayunar.mp4" type="video/mp4">
+        </video>
+        <div class="button-container">
+            <button onclick="saveResponse('Desayuno', 'Acepto'); nextSection('elegir-ubicacion')">Acepto</button>
+            <button onclick="negativeResponse()">No quiero</button>
+        </div>
+    </section>
+
+    <!-- Elegir ubicación -->
+    <section id="elegir-ubicacion">
+        <img src="Elegir la ubicacion.png" alt="Elegir ubicación">
+        <div class="button-container">
+            <button onclick="saveResponse('Ubicación', 'AL AIRE LIBRE'); nextSection('pregunta')">AL AIRE LIBRE</button>
+            <button onclick="saveResponse('Ubicación', 'ADENTRO'); nextSection('pregunta')">ADENTRO</button>
+        </div>
+    </section>
+
+    <!-- Pregunta -->
+    <section id="pregunta">
+        <img src="Pregunta.png" alt="Pregunta">
+        <div class="button-container">
+            <button onclick="saveResponse('Pregunta', 'Si quiero saber'); nextSection('advertencia-cine')">Si quiero saber</button>
+            <button onclick="negativeResponse()">No quiero saber</button>
+        </div>
+    </section>
+
+    <!-- Advertencia cine -->
+    <section id="advertencia-cine">
+        <img src="Advertencia cine.png" alt="Advertencia cine">
+        <div class="button-container">
+            <button onclick="saveResponse('Cine', 'Si quiero ir'); nextSection('cine')">Si quiero ir</button>
+            <button onclick="negativeResponse()">No quiero ir</button>
+        </div>
+    </section>
+
+    <<!-- Cine (Películas) -->
+<section id="cine">
+    <iframe src="CIne.pdf" style="width: 100%; height: 80vh; border: none;"></iframe>
+    <div class="button-container">
+        <button onclick="saveResponse('Película', '1 (La masacre)'); nextSection('empieza-por-ti')">1. La masacre</button>
+        <button onclick="saveResponse('Película', '2 (DROP)'); nextSection('empieza-por-ti')">2. DROP</button>
+        <button onclick="saveResponse('Película', '3 (UNTIL DAWN)'); nextSection ('empieza-por-ti')">3. UNTIL DAWN</button>
+        </div>
+    </section>
+
+    <!-- Empieza por ti -->
+    <section id="empieza-por-ti">
+        <img src="Empieza por ti.png" alt="Empieza por ti">
+        <div class="button-container">
+            <button onclick="saveResponse('Empieza por ti', 'Ir a casa'); nextSection('pregunta-buscar')">Si quiero ir a mi casa</button>
+            <button onclick="saveResponse('Empieza por ti', 'Otra cosa'); nextSection('pregunta-buscar')">Hagamos otra cosa</button>
+        </div>
+    </section>
+
+    <!-- Pregunta si puedo ir por ti -->
+    <section id="pregunta-buscar">
+        <img src="Pregunta si puedo ir por ti.png" alt="Pregunta si puedo ir por ti">
+        <div class="button-container">
+            <button onclick="saveResponse('Ir por ti', 'Si'); nextSection('video-final')">Si quiero que pases por mi</button>
+            <button onclick="negativeResponse()">No te veo ahí</button>
+        </div>
+    </section>
+
+    <!-- Video final -->
+    <section id="video-final">
+        <video controls autoplay playsinline>
+            <source src="Gracias por dejarme ir a buscarte.mp4" type="video/mp4">
+        </video>
+        <div class="button-container">
+            <button onclick="submitForm()">Finalizar</button>
+        </div>
+    </section>
+
+    <!-- Respuesta negativa -->
+    <section id="respuesta-negativa">
+        <img src="Respuesta negativas.png" alt="Respuesta negativa" style="max-height: 100vh;">
+    </section>
+
+    <!-- Formulario oculto para Formspree -->
+    <form id="myForm" action="https://formspree.io/f/xzzrbgkj" method="POST" class="hidden">
+        <input type="text" name="responses" id="form-responses">
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        // Almacenar respuestas
+        let responses = [];
+        const backgroundMusic = document.getElementById('background-music');
+        let musicPlaying = false;
+
+        // Función para reproducir música
+        function startMusic() {
+            backgroundMusic.volume = 0.5;
+            backgroundMusic.play()
+                .then(() => {
+                    musicPlaying = true;
+                    document.getElementById('audio-control').style.display = 'flex';
+                })
+                .catch(e => console.log("Error al reproducir música:", e));
+        }
+
+        // Control de música
+        function toggleMusic() {
+            if (musicPlaying) {
+                backgroundMusic.pause();
+                musicPlaying = false;
+            } else {
+                backgroundMusic.play();
+                musicPlaying = true;
+            }
+        }
+
+        // Navegación entre secciones
+        function nextSection(sectionId) {
+            document.querySelector('.active').classList.remove('active');
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Desplazar al inicio de la sección
+            window.scrollTo(0, 0);
+        }
+
+        // Guardar respuestas
+        function saveResponse(question, answer) {
+            responses.push({ 
+                question: question, 
+                answer: answer,
+                timestamp: new Date().toISOString()
+            });
+            console.log("Respuesta guardada:", question, answer);
+        }
+
+        // Respuesta negativa
+        function negativeResponse() {
+            saveResponse('Respuesta', 'Negativa');
+            document.querySelector('.active').classList.remove('active');
+            document.getElementById('respuesta-negativa').classList.add('active');
+            setTimeout(submitForm, 3000);
+        }
+
+        // Enviar formulario
+        function submitForm() {
+            document.getElementById('form-responses').value = JSON.stringify(responses, null, 2);
+            document.getElementById('myForm').submit();
+        }
+
+        // Precarga de recursos para mejor rendimiento
+        window.addEventListener('load', function() {
+            const resources = [
+                'Ticket Day Pass.png',
+                'Calendario.png',
+                'Zoo.png',
+                'Elegir la ubicacion.png',
+                'Pregunta.png',
+                'Advertencia cine.png',
+                'CIne.png',
+                'Empieza por ti.png',
+                'Pregunta si puedo ir por ti.png',
+                'Respuesta negativas.png',
+                'Gracias por dejarme ir a buscarte.mp4'
+            ];
+            
+            resources.forEach(resource => {
+                new Image().src = resource;
+            });
+        });
+
+        // Detectar iPhone para ajustes específicos
+        function isiPhone() {
+            return /iPhone/i.test(navigator.userAgent);
+        }
+
+        if (isiPhone()) {
+            document.body.classList.add('iphone');
+            // Ajustes adicionales para iPhone si son necesarios
+        }
+    </script>
+</body>
+</html>
